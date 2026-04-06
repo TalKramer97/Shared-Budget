@@ -51,4 +51,5 @@ The easiest way to run this application is using Docker. This ensures you have t
 * **Monthly Reports:** Export expense breakdowns to CSV/PDF.
 
 ---
-*Developed by Tal Kramer - [Link to your LinkedIn/Portfolio]*
+*Developed by Tal Kramer - www.linkedin.com/in/tal-kramer100
+
