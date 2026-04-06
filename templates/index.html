@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דף הבית - ניהול הוצאות</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div style="background-color: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 800px; margin-left: auto; margin-right: auto;">
+        <div>
+            <span>שלום, <strong>{{ session['hebrew_name'] }}</strong>!</span> |
+            <a href="{{ url_for('setting') }}" style="color: var(--primary-color); text-decoration: none;">הגדרות</a> |
+            <a href="{{ url_for('logout') }}" style="color: var(--danger-color); text-decoration: none; font-weight: bold;">התנתק</a>
+        </div>
+        
+        
+    </div>
+
+    <div class="expense-card" style="max-width: 800px;">
+        <h2>ניהול התקציב החודשי</h2>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>סה"כ הוצאות החודש: {{ total_expenses }} ₪</h3>
+            <div>
+                <a href="{{ url_for('add_expense') }}" style="text-decoration: none;">
+                    <button style="width: auto; padding: 10px 15px; margin-left: 10px;">הוסף הוצאה</button>
+                </a>
+                <a href="{{ url_for('history') }}" style="text-decoration: none;">
+                    <button style="width: auto; padding: 10px 15px; background-color: #555;">היסטוריה</button>
+                </a>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 20px;">
+
+        <h3>פירוט לפי קטגוריות</h3>
+
+        {% if expenses_by_category %}
+            {% for category, items in expenses_by_category.items() %}
+                {% if items %}
+                <details>
+                    <summary>
+                        {{ category }} (סה"כ: {{ items | map(attribute='amount') | sum }} ₪ | {{ items|length }} פריטים)
+                    </summary>
+                    <ul>
+                        {% for item in items %}
+                            <li style="list-style: disc; margin-bottom: 8px;">
+                                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+                                    <span>
+                                        <strong>{{ "%.2f" | format(item.amount) }} ₪ ₪</strong> {% if item.description %}- {{ item.description }}{% endif %}
+                                        <span style="color: var(--primary-color); font-size: 0.9em; font-weight: bold;">
+                                            (שולם ע"י: {{ item.user.hebrew_name }})
+                                        </span>
+                                    </span>
+                                    <span style="display: inline-flex; gap: 6px; align-items: center; flex-shrink: 0;">
+                                        <button type="button" onclick="toggleEditForm({{ item.id }})" title="ערוך" style="padding: 4px 8px; font-size: 0.95em; background: #f0f0f0; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer;">✏️</button>
+                                        <form action="{{ url_for('delete_expense') }}" method="post" style="display: inline; margin: 0;">
+                                            <input type="hidden" name="expense_id" value="{{ item.id }}">
+                                            <button type="submit" onclick="return confirm('Are you sure?');" style="padding: 4px 10px; font-size: 0.85em; background-color: var(--danger-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;">מחק</button>
+                                        </form>
+                                    </span>
+                                </div>
+                                <div id="edit-form-wrap-{{ item.id }}" class="expense-inline-edit" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 6px; max-width: 100%;">
+                                    <form action="{{ url_for('edit_expense') }}" method="post" style="display: flex; flex-direction: column; gap: 8px;">
+                                        <input type="hidden" name="expense_id" value="{{ item.id }}">
+                                        <label style="font-size: 0.9em;">סכום (₪):
+                                            <input type="number" name="amount" step="0.01" required value="{{ item.amount }}" style="width: 100%; max-width: 200px; box-sizing: border-box;">
+                                        </label>
+                                        <label style="font-size: 0.9em;">קטגוריה:
+                                            <select name="category" required style="width: 100%; max-width: 220px; box-sizing: border-box;">
+                                                <option value="מזון" {% if item.category == 'מזון' %}selected{% endif %}>מזון</option>
+                                                <option value="תחבורה" {% if item.category == 'תחבורה' %}selected{% endif %}>תחבורה</option>
+                                                <option value="דיור" {% if item.category == 'דיור' %}selected{% endif %}>דיור</option>
+                                                <option value="חשבונות" {% if item.category == 'חשבונות' %}selected{% endif %}>חשבונות</option>
+                                                <option value="פנאי" {% if item.category == 'פנאי' %}selected{% endif %}>פנאי</option>
+                                                <option value="אחר" {% if item.category == 'אחר' %}selected{% endif %}>אחר</option>
+                                            </select>
+                                        </label>
+                                        <label style="font-size: 0.9em;">תיאור:
+                                            <input type="text" name="description" value="{{ item.description or '' }}" placeholder="תיאור (אופציונלי)" style="width: 100%; max-width: 320px; box-sizing: border-box;">
+                                        </label>
+                                        <span style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                            <button type="submit" style="padding: 6px 14px; cursor: pointer;">Save</button>
+                                            <button type="button" onclick="toggleEditForm('{{ item.id }}')" style="padding: 6px 14px; cursor: pointer;">Cancel</button>                                        </span>
+                                    </form>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; color: #777;">לא קיימות הוצאות לחודש הנוכחי.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleEditForm(expenseId) {
+            var panel = document.getElementById('edit-form-wrap-' + expenseId);
+            if (!panel) return;
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

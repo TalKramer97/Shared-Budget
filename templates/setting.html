@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הגדרות - ניהול הוצאות</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>הגדרות</h2>
+
+        <div style="background-color: #fff3cd; padding: 12px 15px; border-radius: 5px; border: 1px solid #ffeeba; margin-bottom: 20px;">
+            <span style="color: #856404;">קוד דירה לשיתוף (לצפייה בלבד):</span>
+            <strong style="font-size: 1.15em; letter-spacing: 2px; display: block; margin-top: 6px;">{{ join_code }}</strong>
+        </div>
+
+        {% if error_msg %}
+            <p style="color: var(--danger-color); margin-bottom: 12px;">{{ error_msg }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('setting') }}">
+            <label for="hebrew_name">שם תצוגה (עברית):</label>
+            <input type="text" name="hebrew_name" id="hebrew_name" maxlength="50" required value="{{ user.hebrew_name }}">
+
+            <button type="submit">שמור</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 15px;">
+            <a href="{{ url_for('home') }}" style="color: var(--primary-color); text-decoration: none;">חזרה לדף הבית</a>
+        </p>
+    </div>
+
+</body>
+</html>

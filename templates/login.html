@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התחברות - ניהול הוצאות</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>התחברות למערכת</h2>
+
+        {% if error_msg %}
+            <div class="error-msg">{{ error_msg }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <label>שם משתמש:</label>
+            <input type="text" name="username" required>
+
+            <label>סיסמה:</label>
+            <input type="password" name="password" required>
+
+            <button type="submit">היכנס</button>
+        </form>
+
+        <p style="text-align: center;">
+            <a href="{{ url_for('register') }}" style="color: var(--primary-color); text-decoration: none;">אין לך חשבון? הירשם כאן</a>
+        </p>
+    </div>
+
+</body>
+</html>

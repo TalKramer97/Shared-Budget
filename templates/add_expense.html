@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הוספת הוצאה - ניהול הוצאות</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>הוספת הוצאה חדשה</h2>
+        
+        <form method="POST" action="{{ url_for('add_expense') }}">
+            <label>סכום (₪):</label>
+            <input type="number" name="amount" step="0.01" required>
+
+            <label>קטגוריה:</label>
+            <select name="category" required>
+                <option value="מזון">מזון</option>
+                <option value="תחבורה">תחבורה</option>
+                <option value="דיור">דיור</option>
+                <option value="חשבונות">חשבונות</option>
+                <option value="פנאי">פנאי</option>
+                <option value="אחר">אחר</option>
+            </select>
+
+            <label>תיאור (אופציונלי):</label>
+            <input type="text" name="description" placeholder="למשל: קניות לשבת...">
+
+            <button type="submit">הוסף הוצאה</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 15px;">
+            <a href="{{ url_for('home') }}" style="color: var(--primary-color); text-decoration: none;">חזרה לדף הבית</a>
+        </p>
+    </div>
+
+</body>
+</html>

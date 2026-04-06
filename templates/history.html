@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>היסטוריית הוצאות</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="expense-card" style="max-width: 800px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>היסטוריית הוצאות מלאה</h2>
+            <a href="{{ url_for('home') }}" style="text-decoration: none;">
+                <button style="width: auto; padding: 8px 15px; background-color: #555;">חזרה לדף הבית</button>
+            </a>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 20px;">
+
+        {% if all_history %}
+            {% for month in month_keys %}
+                <details style="margin-bottom: 15px;">
+                    <summary style="font-size: 1.2em; background-color: #e9ecef;">
+                        📅 חודש {{ month }}
+                    </summary>
+                    
+                    <div style="margin-top: 15px; padding-right: 15px;">
+                        {% for category, items in all_history[month].items() %}
+                            <details style="margin-bottom: 10px; background-color: #fff;">
+                                <summary style="font-size: 1.05em; color: #444;">
+                                    📂 {{ category }} (סה"כ: {{ items | map(attribute='amount') | sum }} ₪)
+                                </summary>
+                                
+                                <ul>
+                                    {% for item in items %}
+                                        <li>
+                                            <strong>{{ "%.2f" | format(item.amount) }} ₪ ₪</strong> - {{ item.description }} 
+                                            <span style="color: var(--primary-color); font-size: 0.85em; font-weight: bold;">
+                                                (שולם ע"י: {{ item.user.hebrew_name }} ב-{{ item.date_posted.strftime('%d/%m/%Y') }})
+                                            </span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </details>
+                        {% endfor %}
+                    </div>
+                </details>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; color: #777;">עדיין אין היסטוריית הוצאות במערכת.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

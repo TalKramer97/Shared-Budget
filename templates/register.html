@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הרשמה - ניהול הוצאות</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>הרשמה למערכת</h2>
+        
+        {% if errors %}
+            <div class="error-msg">
+                <ul style="list-style-type: none; padding: 0; margin: 0;">
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <label>שם משתמש:</label>
+            <input type="text" name="username" required>
+            
+            <label>אימייל:</label>
+            <input type="email" name="email" required>
+            
+            <label>סיסמה:</label>
+            <input type="password" name="password" required>
+
+            <label>שם עברי: (אופציונלי)</label>
+            <input type="text" name="hebrew_name" >
+            
+            <div style="background-color: #f0f8ff; padding: 15px; border: 1px dashed #2196F3; border-radius: 5px; margin-top: 10px;">
+                <label><strong>קוד הצטרפות למשק בית קיים:</strong></label><br>
+                <input type="text" name="join_code" placeholder="למשל: A7X9BQ">
+                <p style="font-size: 0.85em; color: #555; margin-top: 5px;">
+                    * רוצה לפתוח משק בית חדש? פשוט השאר את השדה הזה ריק.
+                </p>
+            </div>
+            <br>
+            
+            <button type="submit">הרשם למערכת</button>
+        </form>
+        
+        <p style="text-align: center;">
+            <a href="{{ url_for('login') }}" style="color: var(--primary-color); text-decoration: none;">כבר יש לך חשבון? התחבר כאן</a>
+        </p>
+    </div>
+
+</body>
+</html>

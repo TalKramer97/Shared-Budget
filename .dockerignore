@@ -1,0 +1,58 @@
+# Virtual environments (image installs deps from requirements.txt)
+venv/
+.venv/
+env/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# Git and version control
+.git/
+.gitignore
+.gitattributes
+
+# IDE / editor
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local secrets (use env / secrets in Docker instead)
+.env
+.env.*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+tmp/
+temp/
+
+# Local SQLite / Flask instance data (mount a volume or init in container)
+instance/
+*.db
+*.sqlite3
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Documentation (not needed at runtime; remove this line if you COPY docs on purpose)
+docs/
